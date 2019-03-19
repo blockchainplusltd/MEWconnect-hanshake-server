@@ -1,0 +1,74 @@
+version: 2
+jobs:
+  deploy:
+    # This is a directory where all your repo content will be placed.
+    # Name is not that important at this case.
+    working_directory: ~/app
+
+    # Docker environment where we gonna run our build deployment scripts
+    docker:
+      - image: circleci/node:8.11
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      # Install npm dependencies 🙂
+      - run: npm install
+
+      # Make things faster
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # !!! This installs AWS Elastic Beanstalk CLI 'awsebcli' !!!
+      - run:
+          name: Installing deployment dependencies
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install awsebcli --upgrade
+
+      - run:
+          name: Setup AWS credentials
+          command: |
+            mkdir ~/.aws && printf "[profile eb-cli]\naws_access_key_id = ${AWS_ACCESS_KEY_ID}\naws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" > ~/.aws/config
+      - run : echo ${AWS_ACCESS_KEY_ID}
+
+      # Build css and js (prod script builds these. you should make your own)
+      - run:
+          name: Install Node modules
+          working_directory: ~/repo
+          command: npm run prod
+
+      # Add everything (except vendors that will be installed automatically and node_modules that are not needed because we already built js and css) to a ZIP
+      - run:
+          name: ZIP project
+          working_directory: ~/repo
+          command: zip hanshakeServer.zip -r * .[^.]* --exclude=vendor/* --exclude=node_modules/* --exclude=.circleci/* --exclude=.elasticbeanstalk/*
+
+      - run:
+          name: Deploy to AWS ElasticBeanstalk using settings from ./.elasticbeanstalk/config.yml
+          command:  |
+            chmod +x ./.elasticbeanstalk/check_eb_branch.py
+            if ./.elasticbeanstalk/check_eb_branch.py $(git rev-parse --abbrev-ref HEAD); then
+               eb deploy
+            fi
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only:
+                - dev
