@@ -8,6 +8,7 @@ jobs:
     # Docker environment where we gonna run our build deployment scripts
     docker:
       - image: circleci/node:8.11
+      - image: circleci/python:2.7-jessie
 
     steps:
       - checkout
