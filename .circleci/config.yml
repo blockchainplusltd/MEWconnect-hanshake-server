@@ -36,7 +36,7 @@ jobs:
           command: |
             sudo apt-get -y -qq update
             sudo apt-get install python-pip python-dev build-essential
-            sudo pip install awsebcli --upgrade
+            sudo pip install --upgrade awsebcli
 
       - run:
           name: Setup AWS credentials
