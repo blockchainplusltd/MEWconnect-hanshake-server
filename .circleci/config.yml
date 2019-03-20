@@ -47,15 +47,15 @@ jobs:
 
       # Build css and js (prod script builds these. you should make your own)
       - run:
-          name: Install Node modules
+          name: Project Build
           working_directory: ~/repo
-          command: npm run prod
+          command: npm run build
 
       # Add everything (except vendors that will be installed automatically and node_modules that are not needed because we already built js and css) to a ZIP
       - run:
           name: ZIP project
           working_directory: ~/repo
-          command: zip hanshakeServer.zip -r * .[^.]* --exclude=vendor/* --exclude=node_modules/* --exclude=.circleci/* --exclude=.elasticbeanstalk/*
+          command: zip hanshakeServer.zip -r * .[^.]* --exclude=vendor/* --exclude=node_modules/* --exclude=.circleci/* --exclude=.elasticbeanstalk/* --exclude=example/* --exclude=test/*
 
       - run:
           name: Deploy to AWS ElasticBeanstalk using settings from ./.elasticbeanstalk/config.yml
