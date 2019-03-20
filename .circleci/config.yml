@@ -37,6 +37,10 @@ jobs:
             sudo apt-get -y -qq update
             sudo apt-get install python-pip python-dev build-essential
             sudo pip install --upgrade setuptools
+
+      - run:
+          name: Install awscli & AWS-EB-CLI
+          command: |
             sudo pip install awscli
             sudo pip install awsebcli --upgrade
 
