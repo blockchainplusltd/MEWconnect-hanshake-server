@@ -61,7 +61,7 @@ jobs:
       - run:
           name: ZIP project
           working_directory: ~/repo
-          command: zip hanshakeServer.zip -r * .[^.]* --exclude=vendor/* --exclude=.circleci/* --exclude=.elasticbeanstalk/* --exclude=example/* --exclude=test/*
+          command: zip hanshakeServer.zip -r * .[^.]* --exclude=vendor/* --exclude=node_modules/* --exclude=.circleci/* --exclude=.elasticbeanstalk/* --exclude=example/* --exclude=test/*
 
       - run:
           name: Deploy to AWS ElasticBeanstalk using settings from ./.elasticbeanstalk/config.yml
