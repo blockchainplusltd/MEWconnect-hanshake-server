@@ -42,6 +42,7 @@ export default class SignalServer {
       port: options.redis.port || redis.port
     }));
     this.server.listen({host: this.host, port: this.port}, () => {
+      infoLogger.info(`Connection to Redis : ${this.redis.host}:${this.redis.port}`);
       infoLogger.info(`Listening on ${this.server.address().address}:${this.port}`);
     });
 

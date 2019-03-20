@@ -1,10 +1,10 @@
 branch-defaults:
   dev:
-    environment: Hanshakeserver-demo
+    environment: HanshakeServer-demo3
 #  master:
 #    environment: WalletTradeServer-production
 deploy:
   artifact: hanshakeServer.zip
 global:
-  application_name: HanshakeServer
+  application_name: HanshakeServer-demo
   default_region: ap-northeast-2
