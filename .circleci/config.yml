@@ -41,9 +41,9 @@ jobs:
           name: Install awscli & AWS-EB-CLI
           working_directory: ~/repo
           command: |
-            sudo pip install setuptools --upgrade
-            sudo pip install awscli --upgrade
-            sudo pip install awsebcli --upgrade
+            sudo pip install --upgrade setuptools
+            sudo pip install --upgrade "urllib3==1.22" awscli
+            sudo pip install --upgrade awsebcli
 
       - run:
           name: Setup AWS credentials
